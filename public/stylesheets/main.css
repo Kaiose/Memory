@@ -1069,6 +1069,15 @@ main section.record-list div.table .content table td {
 main section.record-list div.table .content table td div {
   display: inline-block;
 }
+main section.record-list div.table .content table td div button#edit-record {
+    background: transparent;
+    opacity: 0;
+    border: 0;
+    padding: 3px;
+    border-radius: 2px;
+    font-size: 12px;
+    transition: 0.66s all ease-in-out;
+}
 main section.record-list div.table .content table td div form button {
   background: transparent;
   opacity: 0;
@@ -1077,6 +1086,10 @@ main section.record-list div.table .content table td div form button {
   border-radius: 2px;
   font-size: 12px;
   transition: 0.66s all ease-in-out;
+}
+main section.record-list div.table .content table td div button .bi-trash {
+    color: rgb(67, 37, 150);
+    transition: 0.66s all ease-in-out;
 }
 main section.record-list div.table .content table td div form button .bi-trash {
   color: red;
@@ -1096,6 +1109,9 @@ main section.record-list div.table .content table td:nth-child(3) {
   padding: 10px;
   line-height: 25px;
 }
+main section.record-list div.table .content table td:nth-child(3):hover > div > button#edit-record {
+  opacity: 1;
+}  
 main section.record-list div.table .content table td:nth-child(3):hover > div > form button#delete {
   opacity: 1;
 }

@@ -73,7 +73,7 @@ exports.user_profile_post = [
 }
 ];
 
-exports.record_post = (req, res, next)=>{
+exports.edit_record = (req, res, next) => {
     body('title').trim().escape();
     body('description').trim().escape();
     var errors = validationResult(req);
@@ -82,21 +82,57 @@ exports.record_post = (req, res, next)=>{
     }
     else{
         if(errors.isEmpty()){
-        const record = new recordModel({
-            title: req.body.title,
-            description: req.body.detail,
-            date: req.body.date,
-            time: req.body.time,
-            user: req.user._id
-        })
-        record.save((err)=>{
-            if(err){
-                throw err;
-            }
+            recordModel.findByIdAndUpdate(req.body.id, {
+                title: req.body.title,
+                description: req.body.detail,
+                date: req.body.date,
+                time: req.body.time,
+                user: req.user._id
+            },
+            (err) => {
+                if(err){
+                    throw err;
+                }
+                res.redirect('/home');
+            });
+        }   
+        else
+        {
+            console.log('error accur');
+            console.log(errors);
             res.redirect('/home');
-        })
-    }   
-        else{
+        }
+    }
+}
+
+exports.create_record = (req, res, next)=>{
+    body('title').trim().escape();
+    body('description').trim().escape();
+    var errors = validationResult(req);
+    if(!req.isAuthenticated()){
+        res.redirect('/')
+    }
+    else{
+        if(errors.isEmpty()){
+            console.log('start create record model');
+            const record = new recordModel({
+                title: req.body.title,
+                description: req.body.detail,
+                date: req.body.date,
+                time: req.body.time,
+                user: req.user._id
+            })
+
+            record.save((err)=>{
+                if(err){
+                    throw err;
+                }
+                res.redirect('/home');
+            })
+        }   
+        else
+        {
+            console.log(errors);
             res.redirect('/home');
         }
     }

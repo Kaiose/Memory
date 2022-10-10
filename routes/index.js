@@ -11,13 +11,14 @@ router.get('/', (req, res)=>{
 router.get('/home', home.home);
 router.get('/home/profile', home.user_profile);
 router.post('/home/profile', home.user_profile_post);
-router.post('/home/create', home.record_post);
+router.post('/home/create', home.create_record);
 router.get('/home/create' , (req, res, next) => {
     if(!req.isAuthenticated()){
         res.redirect('/user/login')
     }
     res.redirect('/home')
 });
+router.post('/home/edit', home.edit_record);
 router.post('/home', home.record_delete);
 
 // router.post('/home?record_name=', home.record_delete);

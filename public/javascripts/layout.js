@@ -39,4 +39,5 @@ icon.addEventListener('click', ()=>{
         checkmate = false; 
     }
 });
+
 document.querySelector('.header').onclick = () => window.location = '/';

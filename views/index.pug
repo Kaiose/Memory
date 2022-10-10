@@ -12,15 +12,16 @@ block profile
 block content   
   section.add-record
     form#record-form(action="", method="post" onSubmit="document.querySelector('#record-btn').textContent = 'Recording...'") 
+      input#record_id(type="hidden" name="id")
       h3#record-close #[i.bi.bi-x-lg]
       p Record what You meant Forget!
       div.input-general
         div 
           textarea#detail(name="detail", cols="30", rows="10" placeholder="Make sure you put all the details...." required) 
         div 
-          input(type="text" name='title' placeholder="Title" required) 
-          input(type="date" name='date' required)   
-          input(type="time" name='time' required)
+          input#record_title(type="text" name='title' placeholder="Title" required) 
+          input#record_date(type="date" name='date' required)   
+          input#record_time(type="time" name='time' required)
       button#record-btn(type="submit") Record
   main
     section.record-list 
@@ -42,16 +43,17 @@ block content
         div.content
           table(border="0") 
             each record in records 
-              tr 
+              tr
                 td !{record.date}
                 td !{record.title}
                 td !{record.description}
+                  div
+                    button#edit-record(type='button', record=record) #[i.bi.bi-pencil]
                   div 
                     form(action="", method="post") 
                       input(type="hidden", name="record_name" value=record._id)
                       button#delete(type="submit") #[i.bi.bi-trash]
                 td !{record.time}
-
             else 
               tr
                 td.nothing Don`t Keep staring at me! 
