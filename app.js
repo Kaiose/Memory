@@ -15,7 +15,8 @@ const salt = require('./utils/auth');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var userModel = require('./models/user');
-var app = express();
+const https = require('https');
+const fs = require('fs');
 
 var url = process.env.MONGOURL;
 mongoose.connect(url, (err)=>{
@@ -45,6 +46,8 @@ passport.deserializeUser((id, done)=>{
     })
 });
 
+var app = express();
+
 app.use(compression());
 app.use(helmet());
 // view engine setup
@@ -73,7 +76,6 @@ app.use((req, res, next)=>{
 });
 
 
-
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 
@@ -93,10 +95,21 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+var options = {
+  key: fs.readFileSync(__dirname + '/ssl/server.key'),
+  cert: fs.readFileSync(__dirname + '/ssl/server.crt'),
+  ca: fs.readFileSync(__dirname + '/ssl/server.csr'),
+}
+
 const port = 3000 || process.env.PORT
-app.listen(4000, (err)=>{
-  if(err) throw err;
-  console.log(`Listening on port ${port}`)
-})
+
+https.createServer(options, app).listen(3000, () => {
+  console.log(`Listening on port ${port}`);
+});
+
+// app.listen(4000, (err)=>{
+//   if(err) throw err;
+//   console.log(`Listening on port ${port}`)
+// })
 
 module.exports = app;
