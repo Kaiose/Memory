@@ -95,21 +95,43 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var options = {
-  key: fs.readFileSync(__dirname + '/ssl/server.key'),
-  cert: fs.readFileSync(__dirname + '/ssl/server.crt'),
-  ca: fs.readFileSync(__dirname + '/ssl/server.csr'),
+function StartServer()
+{
+    const port = 4000 || process.env.PORT
+
+    let ssl_key_path = __dirname + '/ssl/server.key';
+    let ssl_cert_path = __dirname + '/ssl/server.crt';
+    let ssl_ca_path = __dirname + '/ssl/server.csr';
+
+    let can_use_ssl = true;
+        can_use_ssl &= fs.existsSync(ssl_key_path);
+        can_use_ssl &= fs.existsSync(ssl_cert_path);
+        can_use_ssl &= fs.existsSync(ssl_ca_path);
+
+    if (can_use_ssl)
+    {
+        var options = {
+            key: fs.readFileSync(ssl_key_path),
+            cert: fs.readFileSync(ssl_cert_path),
+            ca: fs.readFileSync(ssl_ca_path),
+        }
+
+        https.createServer(options, app).listen(port, () => {
+            console.log("Start With Http, can connect (private ip or share hub ip) ")
+            console.log(`Listening on port ${port}`);
+        });
+        
+    }
+    else
+    {
+        app.listen(port, (err)=>{
+          if(err) throw err;
+          console.log("Start With Http, can connect (127.0.0.1) ")
+          console.log(`Listening on port ${port}`)
+        })
+    }
 }
 
-const port = 3000 || process.env.PORT
-
-https.createServer(options, app).listen(3000, () => {
-  console.log(`Listening on port ${port}`);
-});
-
-// app.listen(4000, (err)=>{
-//   if(err) throw err;
-//   console.log(`Listening on port ${port}`)
-// })
+StartServer();
 
 module.exports = app;
