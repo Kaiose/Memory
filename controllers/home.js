@@ -19,6 +19,7 @@ exports.home = (req, res)=>{
     },
         function(err, results){
             if(err){throw err}
+            //console.log(results.record);
             res.render('index', {title: results.user.username + ' Record', user:results.user, records:results.record})
         })
 }

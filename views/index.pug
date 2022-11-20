@@ -46,9 +46,10 @@ block content
               tr
                 td !{record.date}
                 td !{record.title}
-                td !{record.description}
+                td 
+                  pre !{record.description}
                   div
-                    button#edit-record(type='button', record=record) #[i.bi.bi-pencil]
+                    button.edit-record(type='button', record=record) #[i.bi.bi-pencil]
                   div 
                     form(action="", method="post") 
                       input(type="hidden", name="record_name" value=record._id)

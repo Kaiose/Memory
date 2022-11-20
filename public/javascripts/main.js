@@ -6,7 +6,7 @@ const addContainer = document.querySelector('.add-record');
 const recordForm = document.querySelector('#record-form');
 const recordClose = document.querySelector('#record-close');
 
-const recordEditBtn = document.querySelector('#edit-record');
+const recordEditBtns = document.querySelectorAll('.edit-record');
 
 function SetRecordForm({id, title, desc, date, time})
 {
@@ -76,9 +76,9 @@ recordClose.addEventListener('click', ()=>{
     })
 })
 
-recordEditBtn.addEventListener('click', () => {
+recordEditBtns.forEach(recordEditBtn => recordEditBtn.addEventListener('click', () => {
     window.history.pushState('Home', 'Home', "/home/edit");
-    //console.log(recordEditBtn);
+    console.log(recordEditBtn);
 
     let record_str = recordEditBtn.getAttribute('record');
     let record = JSON.parse(record_str);
@@ -112,4 +112,4 @@ recordEditBtn.addEventListener('click', () => {
             })
         }
     }) 
-});
+}));

@@ -1069,7 +1069,7 @@ main section.record-list div.table .content table td {
 main section.record-list div.table .content table td div {
   display: inline-block;
 }
-main section.record-list div.table .content table td div button#edit-record {
+main section.record-list div.table .content table td div button.edit-record {
     background: transparent;
     opacity: 0;
     border: 0;
@@ -1109,7 +1109,7 @@ main section.record-list div.table .content table td:nth-child(3) {
   padding: 10px;
   line-height: 25px;
 }
-main section.record-list div.table .content table td:nth-child(3):hover > div > button#edit-record {
+main section.record-list div.table .content table td:nth-child(3):hover > div > button.edit-record {
   opacity: 1;
 }  
 main section.record-list div.table .content table td:nth-child(3):hover > div > form button#delete {
