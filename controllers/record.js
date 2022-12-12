@@ -1,14 +1,14 @@
 var express = require('express');
 var userModel  = require('../models/user');
 var recordModel  = require('../models/record');
-var recordCollectionModel = require('../models/record_collection');
+var recordTableModel = require('../models/record_table');
 
 var async = require('async');
 var mongoose = require('mongoose');
 var { body, validationResult } = require('express-validator');
 
-// record collection
-exports.create_record_collection = (req, res, next) => {
+// record table
+exports.create_record_table = (req, res, next) => {
   if(!req.isAuthenticated()){
       res.redirect('/')
       return;
@@ -23,13 +23,13 @@ exports.create_record_collection = (req, res, next) => {
     return;
   }
 
-  const collection = new recordCollectionModel({
+  const table = new recordTableModel({
     title : "",
     description : "",
     user : req.user._id
   });
 
-  collection.save((err)=>{
+  table.save((err)=>{
     if(err){
         throw err;
     }
@@ -37,11 +37,11 @@ exports.create_record_collection = (req, res, next) => {
   });
 }
 
-exports.delete_record_collection = (req, res, next) => {
+exports.delete_record_table = (req, res, next) => {
 
 }
 
-exports.edit_record_collection = (req, res, next) => {
+exports.edit_record_table = (req, res, next) => {
 
 }
 
