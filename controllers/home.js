@@ -4,6 +4,8 @@ var recordModel  = require('../models/record');
 var async = require('async');
 var mongoose = require('mongoose');
 var { body, validationResult } = require('express-validator');
+
+
 exports.home = (req, res)=>{
     if(!req.isAuthenticated()){
         res.redirect("/user/login");
@@ -20,7 +22,7 @@ exports.home = (req, res)=>{
         function(err, results){
             if(err){throw err}
             //console.log(results.record);
-            res.render('index', {title: results.user.username + ' Record', user:results.user, records:results.record})
+            res.render('record', {title: results.user.username + ' Record', user:results.user, records:results.record})
         })
 }
 
@@ -73,76 +75,3 @@ exports.user_profile_post = [
     }
 }
 ];
-
-exports.edit_record = (req, res, next) => {
-    body('title').trim().escape();
-    body('description').trim().escape();
-    var errors = validationResult(req);
-    if(!req.isAuthenticated()){
-        res.redirect('/')
-    }
-    else{
-        if(errors.isEmpty()){
-            recordModel.findByIdAndUpdate(req.body.id, {
-                title: req.body.title,
-                description: req.body.detail,
-                date: req.body.date,
-                time: req.body.time,
-                user: req.user._id
-            },
-            (err) => {
-                if(err){
-                    throw err;
-                }
-                res.redirect('/home');
-            });
-        }   
-        else
-        {
-            console.log('error accur');
-            console.log(errors);
-            res.redirect('/home');
-        }
-    }
-}
-
-exports.create_record = (req, res, next)=>{
-    body('title').trim().escape();
-    body('description').trim().escape();
-    var errors = validationResult(req);
-    if(!req.isAuthenticated()){
-        res.redirect('/')
-    }
-    else{
-        if(errors.isEmpty()){
-            console.log('start create record model');
-            const record = new recordModel({
-                title: req.body.title,
-                description: req.body.detail,
-                date: req.body.date,
-                time: req.body.time,
-                user: req.user._id
-            })
-
-            record.save((err)=>{
-                if(err){
-                    throw err;
-                }
-                res.redirect('/home');
-            })
-        }   
-        else
-        {
-            console.log(errors);
-            res.redirect('/home');
-        }
-    }
-}
-
-exports.record_delete = (req, res, next) => {
-        recordModel.findByIdAndDelete(req.body.record_name).exec(function(err){
-            if(err){throw err}
-            res.redirect('/home')
-        })
-
-}

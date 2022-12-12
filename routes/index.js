@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var home = require('../controllers/home');
+var record = require('../controllers/record');
 
+// home
 router.get('/', (req, res)=>{
     if(!req.isAuthenticated()){
         res.redirect('/user/login');
@@ -9,17 +11,20 @@ router.get('/', (req, res)=>{
     res.redirect('/home')
 })
 router.get('/home', home.home);
+
+// profile
 router.get('/home/profile', home.user_profile);
 router.post('/home/profile', home.user_profile_post);
-router.post('/home/create', home.create_record);
+
+// record
+router.post('/home/create', record.create_record);
 router.get('/home/create' , (req, res, next) => {
     if(!req.isAuthenticated()){
         res.redirect('/user/login')
     }
     res.redirect('/home')
 });
-router.post('/home/edit', home.edit_record);
-router.post('/home', home.record_delete);
+router.post('/home/edit', record.edit_record);
+router.post('/home', record.record_delete);
 
-// router.post('/home?record_name=', home.record_delete);
 module.exports = router;

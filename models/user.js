@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 var userSchema = new Schema({
     username: {type: String, minLength:3, required:true},
     email: {type: String},
-    record_title: {type:String, maxLength: 12},
+    record_title: {type:String, maxLength: 12}, // 추후 제거
     gender: {type:String, maxLength:6},
     password: {type:String, minLength:6},
     creation_date: {type:Date, default: Date.now},
