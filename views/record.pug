@@ -2,7 +2,7 @@ extends layout
 
 block profile
   div.profile
-    p.icon#person #[i.bi.bi-person] Hi, #{user.username}
+    p.icon#person #[i.bi.bi-person] Hi, #{_user.username}
       span.nav 
         i 
           a(href="/home" + "/profile") View profile
@@ -26,13 +26,17 @@ block content
   page
     side 
       div.sidebar
+        div.creation
+          button#new_record_table #[i.bi.bi-plus-lg]
         button.bar_item(title="Memory Title") Memory Title
         button.bar_item(title="Code Guide") Code Guide
         button.bar_item(title="Computer Science") Computer Science
+        each table in _record_tables
+          button.bar_item(title=table.title) !{table.title}
     main
       section.record-list
         div.title 
-          p #{user.record_title} #[i.bi.bi-pencil]
+          p #{_user.record_title} #[i.bi.bi-pencil]
 
         div.creation
           button.refresh(onclick="window.location.reload()") Refresh #[i.bi.bi-arrow-clockwise]
@@ -48,7 +52,7 @@ block content
 
           div.content
             table(border="0") 
-              each record in records 
+              each record in _records 
                 tr
                   td !{record.date}
                   td !{record.subject}

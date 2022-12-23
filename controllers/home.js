@@ -22,7 +22,34 @@ exports.home = (req, res)=>{
         function(err, results){
             if(err){throw err}
             //console.log(results.record);
-            res.render('record', {title: results.user.username + ' Record', user:results.user, records:results.record})
+            res.render('record', {
+              _title: results.user.username + ' Record',
+              _user:results.user,
+              _record_tables: [
+                {
+                  title: "Memory Title",
+                },
+                {
+                  title: "Code Guide",
+                },
+                {
+                  title: "Code Experience",
+                },
+                {
+                  title: "Content System",
+                },
+                {
+                  title: "Computer Science"
+                },
+                {
+                  title: "Network System"
+                },
+                {
+                  title: "Framework"
+                }
+              ],
+              _records:results.record,
+            })
         })
 }
 
@@ -41,7 +68,11 @@ exports.user_profile = (req, res)=>{
         function(err, results){
             const messages = req.flash();
             if(err){throw err};
-             res.render('profile', {title: 'Your profile', user: results.user, messages, record_count: results.records});
+             res.render('profile', {
+              _title: 'Your profile',
+              _user: results.user, 
+              _messages, 
+              _record_count: results.records});
         }
     )
 }

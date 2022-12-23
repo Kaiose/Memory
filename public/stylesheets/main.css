@@ -912,6 +912,41 @@ side div.sidebar {
   background-color: #ecdcaf;
   align-items: left;
 }
+
+side div.sidebar div.creation {
+  display: flex;
+}
+
+side div.sidebar div.creation button {
+  background: rgb(88, 140, 218);
+  border: #1877f2;
+  color: white;
+  border: 1px solid #fff;
+  border-radius: 50px;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  transition: 0.5s all ease-out;
+  margin: 10px 10px 0px 10px;
+  width: 100%;
+}
+
+side div.sidebar div.creation button:hover {
+  background: rgb(88, 140, 218);
+  border: #1877f2;
+  color: white;
+  border: 1px solid #fff;
+  border-radius: 50px;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  transition: 0.5s all ease-out;
+  margin: 10px 10px 0px 10px;
+  width: 100%;
+  opacity: 0.5;
+}
+
+
 side button.bar_item {
   display: flex;
   justify-content: center;
@@ -930,6 +965,27 @@ side button.bar_item {
   font-weight: bold;
   color: rgb(88, 140, 218);
   text-decoration: none;
+}
+
+side button.bar_item:hover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 10%;
+  border-width: 1px;
+  outline: auto;
+  border-color: black;
+  border: #1877f2;
+  border-radius: 1px;
+  margin: 10px 10px 0px 10px;
+
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(88, 140, 218);
+  text-decoration: none;
+  opacity: 0.5;
 }
 
 main {

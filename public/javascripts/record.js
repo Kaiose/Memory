@@ -5,7 +5,6 @@ const recordBtn = document.querySelector('.new-record');
 const addContainer = document.querySelector('.add-record');
 const recordForm = document.querySelector('#record-form');
 const recordClose = document.querySelector('#record-close');
-
 const recordEditBtns = document.querySelectorAll('.edit-record');
 
 function SetRecordForm({id, subject, desc, date, time})
