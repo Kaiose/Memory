@@ -12,11 +12,19 @@ const flash = require('connect-flash');
 const compression = require('compression');
 const helmet = require('helmet');
 const salt = require('./utils/auth');
+const fs = require('fs');
+
+const https = require('https');
+const ws = require('ws');
+
+// custom module
+var ConfigLocal = require('./utils/config_local');
+const { config } = require('dotenv');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var userModel = require('./models/user');
-const https = require('https');
-const fs = require('fs');
+const ClientMgr = require('./client/client_mgr');
+
 
 var url = process.env.MONGOURL;
 mongoose.connect(url, (err)=>{
@@ -95,41 +103,78 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+/// prepare manager
+var client_mgr = new ClientMgr();
+
+///
+
 function StartServer()
 {
-    const port = 4000 || process.env.PORT
-
-    let ssl_key_path = __dirname + '/ssl/server.key';
-    let ssl_cert_path = __dirname + '/ssl/server.crt';
-    let ssl_ca_path = __dirname + '/ssl/server.csr';
-
-    let can_use_ssl = true;
-        can_use_ssl &= fs.existsSync(ssl_key_path);
-        can_use_ssl &= fs.existsSync(ssl_cert_path);
-        can_use_ssl &= fs.existsSync(ssl_ca_path);
-
-    if (can_use_ssl)
+    const config_local_path = "config_local.json";
+    const config_local = new ConfigLocal();
+    let result = config_local.load(config_local_path);
+    if (!result)
     {
-        var options = {
-            key: fs.readFileSync(ssl_key_path),
-            cert: fs.readFileSync(ssl_cert_path),
-            ca: fs.readFileSync(ssl_ca_path),
-        }
+      console.log(`[config_local] load fail`);
+      return;
+    }
 
+    if (config_local.props.use_ws)
+      OpenWSS(config_local.props.port);
+
+    if (config_local.props.use_https)
+      OpenHttp(config_local.props.port);
+
+}
+
+function OpenWSS(port)
+{
+  const websocket = new ws({port: port});
+
+  websocket.on('connection', (client_socket) => {
+    console.log('Connected New Client');
+    client_mgr.createUser(client_socket);
+  });
+}
+
+function OpenHttp(port)
+{
+  const ssl_key_path  = __dirname + '/ssl/server.key';
+  const ssl_cert_path = __dirname + '/ssl/server.crt';
+  const ssl_ca_path   = __dirname + '/ssl/server.csr';
+
+  let can_use_ssl = true;
+      can_use_ssl &= fs.existsSync(ssl_key_path);
+      can_use_ssl &= fs.existsSync(ssl_cert_path);
+      can_use_ssl &= fs.existsSync(ssl_ca_path);
+
+  if (can_use_ssl)
+  {
+      const options = {
+          key: fs.readFileSync(ssl_key_path),
+          cert: fs.readFileSync(ssl_cert_path),
+          ca: fs.readFileSync(ssl_ca_path),
+      }
+
+      if (config_local.props.use_https)
+      {
         https.createServer(options, app).listen(port, () => {
-            console.log("Start With Http, can connect (private ip or share hub ip) ")
-            console.log(`Listening on port ${port}`);
+          console.log("Start With Http, can connect (private ip or share hub ip) ")
+          console.log(`Listening on port ${port}`);
         });
-        
-    }
-    else
-    {
-        app.listen(port, (err)=>{
-          if(err) throw err;
-          console.log("Start With Http, can connect (127.0.0.1) ")
-          console.log(`Listening on port ${port}`)
-        })
-    }
+      }
+      
+
+  }
+  else
+  {
+      app.listen(port, (err)=>{
+        if(err) throw err;
+        console.log("Start With Http, can connect (127.0.0.1) ")
+        console.log(`Listening on port ${port}`)
+      })
+  } 
 }
 
 StartServer();

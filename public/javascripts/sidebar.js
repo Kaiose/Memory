@@ -15,6 +15,11 @@ NewRecordTableBtn.addEventListener('click', ()=>{
   console.log("[record_table] click creation record btn");
 
   var request = new XMLHttpRequest();
+  request.open("GET", '/')
+
+  request.addEventListener("readystatechange", event => {
+    
+  });
   /*
     1. request create new table
     2. response

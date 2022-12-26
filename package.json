@@ -29,7 +29,8 @@
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
     "pug": "2.0.0-beta11",
-    "unsplash": "^4.2.0"
+    "unsplash": "^4.2.0",
+    "ws": "^8.11.0"
   },
   "main": "app.js",
   "author": "Crypted_420",
