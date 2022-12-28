@@ -2,6 +2,7 @@ var icon = document.querySelector('.code');
 var bi = document.querySelector('.biCode');
 var footers = document.querySelectorAll('.footers');
 var checkmate = false;
+/*
 icon.addEventListener('click', ()=>{
     if(!checkmate){
         bi.classList.remove('bi-code');
@@ -39,5 +40,5 @@ icon.addEventListener('click', ()=>{
         checkmate = false; 
     }
 });
-
+*/
 document.querySelector('.header').onclick = () => window.location = '/';

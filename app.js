@@ -15,7 +15,7 @@ const salt = require('./utils/auth');
 const fs = require('fs');
 
 const https = require('https');
-const ws = require('ws');
+const { WebSocketServer } = require('ws');
 
 // custom module
 var ConfigLocal = require('./utils/config_local');
@@ -57,7 +57,25 @@ passport.deserializeUser((id, done)=>{
 var app = express();
 
 app.use(compression());
-app.use(helmet());
+
+
+// csp(Content-Security-Policy)
+const cspOptions = {
+  directives: {
+    // 기본 옵션을 가져옵니다.
+    ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+    
+    // 구글 API 도메인과 인라인된 스크립트를 허용합니다.
+    "script-src": ["'self'", "*.googleapis.com", "'unsafe-inline'"],
+
+    "connect-src" : ["'self'", "ws://127.0.0.1:5000"]
+  }
+}
+
+app.use(helmet({
+  contentSecurityPolicy: cspOptions
+}));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -120,22 +138,26 @@ function StartServer()
       return;
     }
 
-    if (config_local.props.use_ws)
-      OpenWSS(config_local.props.port);
+    client_mgr.init(config_local);
 
-    if (config_local.props.use_https)
-      OpenHttp(config_local.props.port);
+    if (config_local.get('use_ws'))
+      OpenWSS(config_local.get('ws_port'));
+
+    if (config_local.get('use_https'))
+      OpenHttp(config_local.get('https_port'));
 
 }
 
 function OpenWSS(port)
 {
-  const websocket = new ws({port: port});
+  const websocket = new WebSocketServer({port: port});
 
   websocket.on('connection', (client_socket) => {
     console.log('Connected New Client');
     client_mgr.createUser(client_socket);
   });
+
+  console.log(`Start With WebSocket, can connect (127.0.0.1:${port}) `);
 }
 
 function OpenHttp(port)
@@ -157,22 +179,16 @@ function OpenHttp(port)
           ca: fs.readFileSync(ssl_ca_path),
       }
 
-      if (config_local.props.use_https)
-      {
-        https.createServer(options, app).listen(port, () => {
-          console.log("Start With Http, can connect (private ip or share hub ip) ")
-          console.log(`Listening on port ${port}`);
-        });
-      }
-      
-
+      https.createServer(options, app).listen(port, () => {
+        console.log("Start With Http, can connect (private ip or share hub ip) ")
+        console.log(`Listening on port ${port}`);
+      });
   }
   else
   {
       app.listen(port, (err)=>{
         if(err) throw err;
-        console.log("Start With Http, can connect (127.0.0.1) ")
-        console.log(`Listening on port ${port}`)
+        console.log(`Start With Http, can connect (127.0.0.1:${port})`);
       })
   } 
 }

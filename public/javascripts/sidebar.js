@@ -1,5 +1,5 @@
 const BarItems = document.querySelectorAll('.bar_item');
-const NewRecordTableBtn = document.querySelector('new_record_table');
+const NewRecordTableBtn = document.querySelector('#new_record_table');
 
 BarItems.forEach(bar_item => bar_item.addEventListener('click', () => {
   var title = bar_item.getAttribute('title');
@@ -14,12 +14,6 @@ BarItems.forEach(bar_item => bar_item.addEventListener('click', () => {
 NewRecordTableBtn.addEventListener('click', ()=>{
   console.log("[record_table] click creation record btn");
 
-  var request = new XMLHttpRequest();
-  request.open("GET", '/')
-
-  request.addEventListener("readystatechange", event => {
-    
-  });
   /*
     1. request create new table
     2. response

@@ -18,7 +18,7 @@ class ConfigLocal
     const body = fs.readFileSync(path);
     this.props = JSON.parse(body);
 
-    console.log(`[config_local] setting(${config_local.toString()})`);
+    console.log(`[config_local] setting(${this.toString()})`);
     return true;
   }
 
@@ -34,6 +34,11 @@ class ConfigLocal
     }
 
     return keys;
+  }
+
+  get(key)
+  {
+    return this.props[key];
   }
 };
 

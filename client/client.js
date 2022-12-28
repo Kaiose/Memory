@@ -19,7 +19,9 @@ class Client
     // add event listen
   }
 
-  IsConnected() { return this.status == 1? true : false; }
+  IsConnected() { 
+    return this.status == 1? true : false; 
+  }
 
   Update()
   {
