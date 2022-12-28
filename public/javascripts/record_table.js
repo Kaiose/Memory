@@ -7,13 +7,17 @@ BarItems.forEach(bar_item => bar_item.addEventListener('click', () => {
   window.history.pushState('param', 'unused', `/home/${title}`);
 
   console.log(window.location.href);
-  var request = new XMLHttpRequest();
   //request.open()
 }));
 
 NewRecordTableBtn.addEventListener('click', ()=>{
   console.log("[record_table] click creation record btn");
 
+  const rq = {
+    "name" : "create_record_table_rq",
+  }
+
+  websocket.send(JSON.stringify(rq));
   /*
     1. request create new table
     2. response

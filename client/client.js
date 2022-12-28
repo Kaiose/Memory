@@ -17,6 +17,9 @@ class Client
     });
 
     // add event listen
+    this.websocket.on('message', (packet) => {
+      console.log(`[recv] ${packet}`);
+    });
   }
 
   IsConnected() { 
