@@ -4,6 +4,8 @@ console.log(websocket);
 
 websocket.addEventListener('open', (data)=> {
   console.log(`[open] : ${data}`);
+  console.log(user);
+  websocket.send(JSON.stringify({"cmd" : "login_rq", "token" : user._id}));
 });
 
 websocket.addEventListener('close', (data)=> {
@@ -14,7 +16,6 @@ websocket.addEventListener('message', (data)=> {
   console.log(`[message] : ${data}`);
 });
 
-
 websocket.addEventListener('error', (data)=> {
   console.log(`[error] : ${data}`);
-});  
+});

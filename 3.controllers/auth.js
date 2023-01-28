@@ -1,17 +1,21 @@
 const express = require('express');
-const User = require('../models/user');
-const Token = require('../models/token');
+const User = require('../1.models/user');
+const Token = require('../1.models/token');
 var salt = require('../utils/auth');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
 const { body, validationResult } = require('express-validator');
 const crypto = require('crypto')
 require('dotenv').config();
+
+//  get '/login'
 exports.login = (req, res) => {
     const messages = req.flash();
     res.render('auth', { title: 'Login', messages })
 };
-exports.login_post =
+
+// post '/login'
+exports.login_post = 
     passport.authenticate('local', {
         failureRedirect: '/user/login', successRedirect: '/home',
         failureFlash: 'The username and password is not found!'
@@ -23,7 +27,8 @@ exports.logout = (req, res) => {
         res.redirect('/user/login')
 
     });
-}
+};
+
 exports.create = (req, res) => {
     const messages = req.flash();
     res.render('create', { title: 'Memory - Create an account', messages });
@@ -52,7 +57,7 @@ exports.create_post = [
                             res.redirect('/user/create-account');
                         }
                         else {
-                            var users = new User({
+                            var user = new User({
                                 username: req.body.username,
                                 email: req.body.email,
                                 password: salt.hashPassword(req.body.password),
@@ -60,7 +65,7 @@ exports.create_post = [
                                 record_title: 'Memory Title'
                             });
 
-                            users.save((err) => {
+                            user.save((err) => {
                                 if (err) {
                                     throw err;
                                 }

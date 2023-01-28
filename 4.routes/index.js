@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var home = require('../controllers/home');
-var record = require('../controllers/record');
+var home = require('../3.controllers/home');
+var record = require('../3.controllers/record');
 
 // home
 router.get('/', (req, res)=>{

@@ -1,16 +1,17 @@
-var express = require('express');
-var userModel  = require('../models/user');
-var recordModel  = require('../models/record');
+var userModel  = require('../1.models/user');
+var recordModel  = require('../1.models/record');
 var async = require('async');
 var mongoose = require('mongoose');
 var { body, validationResult } = require('express-validator');
 
-
+// get '/home'
 exports.home = (req, res)=>{
     if(!req.isAuthenticated()){
         res.redirect("/user/login");
-        
     };
+
+    console.log(req.user);
+
     async.parallel({
         user: function(callback){
             userModel.findById(req.user._id).exec(callback)

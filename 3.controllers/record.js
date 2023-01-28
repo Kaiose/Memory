@@ -1,7 +1,7 @@
 var express = require('express');
-var userModel  = require('../models/user');
-var recordModel  = require('../models/record');
-var recordTableModel = require('../models/record_table');
+var userModel  = require('../1.models/user');
+var recordModel  = require('../1.models/record');
+var recordTableModel = require('../1.models/record_table');
 
 var async = require('async');
 var mongoose = require('mongoose');
@@ -117,5 +117,4 @@ exports.record_delete = (req, res, next) => {
           if(err){throw err}
           res.redirect('/home')
       })
-
 }

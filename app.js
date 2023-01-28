@@ -20,10 +20,10 @@ const { WebSocketServer } = require('ws');
 // custom module
 var ConfigLocal = require('./utils/config_local');
 const { config } = require('dotenv');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var userModel = require('./models/user');
-const ClientMgr = require('./client/client_mgr');
+var indexRouter = require('./4.routes/index');
+var usersRouter = require('./4.routes/users');
+var userModel = require('./1.models/user');
+const ClientMgr = require('./2.client/client_mgr');
 
 
 var url = process.env.MONGOURL;
@@ -77,14 +77,14 @@ app.use(helmet({
 }));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '6.views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '5.public')));
 
 app.use(session({
   secret: 'secr3t',

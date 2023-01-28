@@ -43,10 +43,11 @@ class ClientMgr
 
   createUser(ws)
   {
-    const client = new Client(ws);
+    const key = ClientMgr.gen_key++;
+    const client = new Client(key, ws);
     client.onCreate();
 
-    this.clients.set(this.gen_key++, client);
+    this.clients.set(key, client);
   }
 
   deleteUser(key)
