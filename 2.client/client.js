@@ -1,17 +1,17 @@
 'use struct';
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-
-
 const Queue = require('../0.base/queue');
 const Deserializer = require('./packet_func');
 const RecordTable = require('../1.models/record_table');
-const { hash } = require('bcrypt');
+const Logger = require('../utils/logger');
 
 class Client
 {
   constructor(key, websocket)
   {
+    this.logger = new Logger();
+
     this.key = key;
     this.token = "";
     this.status = 1;
@@ -28,11 +28,6 @@ class Client
     }, 50);
   }
 
-  GetObjectKey()
-  {
-    
-  }
-
   onCreate()
   {
     this.websocket.on('close', () => {
@@ -43,8 +38,7 @@ class Client
     // add event listen
     this.websocket.on('message', (stream) => {
       let protocol = JSON.parse(stream);
-      console.log(`[recv] ${protocol}`);
-
+      this.logger.Str('[recv]').Obj(protocol).Write();
       this.protocols.Enqueue(protocol);
     });
   }
@@ -59,7 +53,7 @@ class Client
     this.ProcessProtocol();
   }
 
-  ProcessProtocol()
+  async ProcessProtocol()
   {
     while(!this.protocols.IsEmpty())
     {
@@ -69,47 +63,67 @@ class Client
     }
   }
 
+  async SendPacket(cmd, body)
+  {
+    if (body != null)
+    {
+      body["cmd"] = cmd;
+    }
+    else
+    {
+      body = {
+        "cmd" : cmd
+      };
+    }
+
+    this.logger.Str('[send]').Obj(body).Write();
+    this.websocket.send(JSON.stringify(body));
+  }
+
   RegistProtocolHandler()
   {
     this.deserializer.AddPacketHandler("login_rq", this.OnLogin_RQ);
     this.deserializer.AddPacketHandler("create_record_table_rq", this.OnCreateRecordTable_RQ);
   }
 
-  OnLogin_RQ(client, packet)
+  async OnLogin_RQ(client, packet)
   {
-    console.log("call func Login_RQ");
-    console.log(packet);
+    client.logger.Str("call func Login_RQ").Write();
 
     client.token = packet.token;
+
+    client.SendPacket("login_rs");
   }
 
-  OnCreateRecordTable_RQ(client, packet)
+  async OnCreateRecordTable_RQ(client, packet)
   {
-    console.log("call func OnCreateRecordTable_RQ");
-    console.log(packet);
+    client.logger.Str("call func OnCreateRecordTable_RQ").Write();
 
     // create record table
-    const table = new RecordTable({
-      title : "test",
-      desciption : "desciption",
-      user : this.token
-    });
-    
-    table.save((err)=>{
-      if (err) {
-        console.log("[create_table] faile," + err);
-        throw err;
-      }
-
-      let rs = {
-        name : "create_record_table_rq",
-        table_name : table.title
-      }
-
-      this.websocket.send(JSON.stringify(rs));
-    });
-    // save record table
-    // response record table list
+    const found_table = await RecordTable.findOne({title: packet.title, user: client.token});
+    if (found_table != null)
+    {
+		// 테스트용..
+		client.SendPacket("create_record_table_rs", {title : packet.title, router : '/home'});
+      //client.SendPacket("create_record_table_rs", {result: "failed"});
+    }
+    else
+    {
+      const table = new RecordTable({
+        title : packet.title,
+        desciption : "desciption",
+        user : client.token
+      });
+      
+      table.save((err)=>{
+        if (err) {
+          console.log("[create_table] faile," + err);
+          throw err;
+        }
+  
+        client.SendPacket("create_record_table_rs", {title : table.title, router : '/home'});
+      });
+    }
   }
 }
 

@@ -10,6 +10,9 @@ block profile
           a(href="/user/logout") Logout
     //- p.icon #[i.bi.bi-person] Hi,
 block content
+  script.
+    var user = !{JSON.stringify(_user)};
+    
   section.add-record
     form#record-form(action="", method="post" onSubmit="document.querySelector('#record-btn').textContent = 'Recording...'") 
       input#record_id(type="hidden" name="id")
@@ -25,7 +28,7 @@ block content
       button#record-btn(type="submit") Record
   page
     side 
-      div.sidebar
+      div.sidebar#title_list
         div.creation
           button#new_record_table #[i.bi.bi-plus-lg]
         button.bar_item(title="Memory Title") Memory Title
@@ -33,6 +36,7 @@ block content
         button.bar_item(title="Computer Science") Computer Science
         each table in _record_tables
           button.bar_item(title=table.title) !{table.title}
+
     main
       section.record-list
         div.title 
@@ -72,8 +76,7 @@ block content
                     i.bi.bi-emoji-expressionless
       section.detail
 
-  script.
-    var user = !{JSON.stringify(_user)};
+
   script(src="/javascripts/viewport.js") 
   script(src="/javascripts/websocket.js")
   script(src="/javascripts/record.js")

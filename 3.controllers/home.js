@@ -1,5 +1,6 @@
 var userModel  = require('../1.models/user');
 var recordModel  = require('../1.models/record');
+var RecordTable = require('../1.models/record_table')
 var async = require('async');
 var mongoose = require('mongoose');
 var { body, validationResult } = require('express-validator');
@@ -16,39 +17,45 @@ exports.home = (req, res)=>{
         user: function(callback){
             userModel.findById(req.user._id).exec(callback)
         },
+        record_table: function(callback) {
+        	RecordTable.find({user: req.user._id}).exec(callback);
+        },
         record: function(callback){
             recordModel.find({user: req.user._id}).exec(callback)
         }
     },
         function(err, results){
             if(err){throw err}
-            //console.log(results.record);
+
+            let temp_tables = [
+              {
+                title: "Memory Title",
+              },
+              {
+                title: "Code Guide",
+              },
+              {
+                title: "Code Experience",
+              },
+              {
+                title: "Content System",
+              },
+              {
+                title: "Computer Science"
+              },
+              {
+                title: "Network System"
+              },
+              {
+                title: "Framework"
+              }
+            ];
+
+            let record_tables = temp_tables.concat(results.record_table);
             res.render('record', {
               _title: results.user.username + ' Record',
               _user:results.user,
-              _record_tables: [
-                {
-                  title: "Memory Title",
-                },
-                {
-                  title: "Code Guide",
-                },
-                {
-                  title: "Code Experience",
-                },
-                {
-                  title: "Content System",
-                },
-                {
-                  title: "Computer Science"
-                },
-                {
-                  title: "Network System"
-                },
-                {
-                  title: "Framework"
-                }
-              ],
+              _record_tables: record_tables,
               _records:results.record,
             })
         })
