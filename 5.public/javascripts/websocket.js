@@ -19,12 +19,14 @@ websocket.addEventListener('message', ({data})=> {
 	let packet = JSON.parse(data);
 	if (packet.cmd == 'create_record_table_rs')
 	{
-		var new_element = document.createElement('button');
-		new_element.className = "bar_item";
-		new_element.setAttribute("title", packet.title);
-		new_element.innerText = packet.title;
+		// var new_element = document.createElement('div');
+		// new_element.className = "bar_item";
+		// new_element.setAttribute("title", packet.title);
+		// new_element.innerText = packet.title;
 
-		document.getElementById("title_list").appendChild(new_element);
+		// document.getElementById("title_list").appendChild(new_element);
+
+        CreateBarItem(packet.title);
 	}
 });
 

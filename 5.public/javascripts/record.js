@@ -35,14 +35,15 @@ person.addEventListener('mouseout', ()=>{
     nav.style.marginTop = '-10px';
 })
 recordBtn.addEventListener('click', ()=>{
-    // addContainer.style.display = 'flex';
     window.history.pushState('Home', 'Home', '/home/create')
+
     gsap.to(addContainer, {
         duration: 1,
         opacity: "1",
         display: 'flex',
         onComplete: function(){
             gsap.to(recordForm, {
+                display: 'block',
                 opacity:1,
                 y: 0,
                 duration: 1,
