@@ -59,6 +59,11 @@ class Client
     {
       let protocol = this.protocols.Dequeue();
       let handler = this.deserializer.GetPacketHandler(protocol.cmd);
+      if (handler == null)
+      {
+        console.log(`[protocol] failed, cannot find handler cmd(${protocol.cmd})`);
+        continue;
+      }
       handler(this, protocol);   
     }
   }
@@ -84,6 +89,7 @@ class Client
   {
     this.deserializer.AddPacketHandler("login_rq", this.OnLogin_RQ);
     this.deserializer.AddPacketHandler("create_record_table_rq", this.OnCreateRecordTable_RQ);
+    this.deserializer.AddPacketHandler("edit_title_rq", this.OnEditTitle_RQ);
   }
 
   async OnLogin_RQ(client, packet)
@@ -117,13 +123,34 @@ class Client
       
       table.save((err)=>{
         if (err) {
-          console.log("[create_table] faile," + err);
+          console.log("[create_table] failed," + err);
           throw err;
         }
   
         client.SendPacket("create_record_table_rs", {title : table.title, router : '/home'});
       });
     }
+  }
+
+  async OnEditTitle_RQ(client, packet)
+  {
+    client.logger.Str("call func OnEditTitle_RQ").Obj(packet).Write();
+    RecordTable.updateOne(
+        {
+            title: packet.from
+        },
+        {
+            $set: {
+                title: packet.to
+            }
+        }, (err)=>{
+            if (err) {
+                console.log("[edit_title] failed," + err);
+                throw err;
+            }
+            
+            client.SendPacket("edit_title_rs");
+        });
   }
 }
 

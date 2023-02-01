@@ -17,7 +17,8 @@ block content
     div#title_edit_form(style="display:none")
       h3#title_edit_form_close #[i.bi.bi-x-lg]
       p Edit Title
-      input#title_edit_input    
+      div
+        input#title_edit_input    
       button#title_edit_btn OK
 
     form#record-form(action="", method="post", style="display:none", onSubmit="document.querySelector('#record-btn').textContent = 'Recording...'") 

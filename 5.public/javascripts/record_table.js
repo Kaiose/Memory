@@ -2,7 +2,8 @@ const BarItems = document.querySelectorAll('.bar_item');
 const NewRecordTableBtn = document.querySelector('#new_record_table');
 const TitleEditForm = document.querySelector('#title_edit_form');
 const TitleEditInput = document.querySelector('#title_edit_input');
-const TitleEditBtn = document.querySelector('#title_edit_btn')
+const TitleEditBtn = document.querySelector('#title_edit_btn');
+const TitleEditClose = document.querySelector('#title_edit_form_close');
 
 NewRecordTableBtn.addEventListener('click', ()=>{
   console.log("[record_table] click creation record btn");
@@ -19,8 +20,31 @@ NewRecordTableBtn.addEventListener('click', ()=>{
 
 TitleEditBtn.addEventListener('click', () => {
     console.log(TitleEditInput);
-    console.log(TitleEditInput.value);
     // send to server ( title : value);
+
+    let from = TitleEditInput.getAttribute("from");
+    let to = TitleEditInput.value;
+
+    let rq = {
+        cmd : "edit_title_rq",
+        from : from,
+        to : to
+    };
+
+    websocket.send(JSON.stringify(rq));
+
+    gsap.to(TitleEditForm, {
+        opacity: 0,
+        display: "none",
+        transform: "translateY(-10px)",
+        onComplete: function() {
+            gsap.to(addContainer, {
+                opacity: 0,
+                duration: 0.5,
+                display: "none"
+            })
+        }
+    });
 });
 
 function CreateBarItem(title)
@@ -37,7 +61,9 @@ function CreateBarItem(title)
 }
 
 function LongPressCallBack(element) {
-    title_edit_input.setAttribute("value", element.getAttribute("title"));
+    title_edit_input.setAttribute("from", element.getAttribute("title"));
+    title_edit_input.value = element.getAttribute("title");
+
     gsap.to(addContainer,
         {
             display: 'flex',
