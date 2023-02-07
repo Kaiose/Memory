@@ -11,12 +11,14 @@ require('dotenv').config();
 //  get '/login'
 exports.login = (req, res) => {
     const messages = req.flash();
+    console.log("Get Login");
+    console.log(req.user);
+
     res.render('auth', { title: 'Login', messages })
 };
 
 // post '/login'
-exports.login_post = 
-    passport.authenticate('local', {
+exports.login_post = passport.authenticate('local', {
         failureRedirect: '/user/login', successRedirect: '/home',
         failureFlash: 'The username and password is not found!'
     });

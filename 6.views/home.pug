@@ -50,7 +50,6 @@ block content
 
         div.creation
           button.refresh(onclick="window.location.reload()") Refresh #[i.bi.bi-arrow-clockwise]
-          button.new-record New record #[i.bi.bi-plus-lg]
 
         div.table
           div.table-th
@@ -68,12 +67,6 @@ block content
                   td !{record.subject}
                   td 
                     pre !{record.description}
-                    div
-                      button.edit-record(type='button', record=record) #[i.bi.bi-pencil]
-                    div 
-                      form(action="", method="post") 
-                        input(type="hidden", name="record_id" value=record._id)
-                        button#delete(type="submit") #[i.bi.bi-trash]
                   td !{record.time}
               else 
                 tr
@@ -85,6 +78,4 @@ block content
 
   script(src="/javascripts/viewport.js") 
   script(src="/javascripts/websocket.js")
-  script(src="/javascripts/record.create.js")
-  script(src="/javascripts/record.js")
   script(src="/javascripts/record_table.js")

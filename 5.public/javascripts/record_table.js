@@ -10,7 +10,7 @@ NewRecordTableBtn.addEventListener('click', ()=>{
 
   const rq = {
     "cmd" : "create_record_table_rq",
-    "title" : "test1"
+    "title" : "New Record Table"
   };
 
   // call pop
@@ -18,16 +18,31 @@ NewRecordTableBtn.addEventListener('click', ()=>{
   websocket.send(JSON.stringify(rq));
 });
 
+TitleEditClose.addEventListener('click', () => {
+    gsap.to(TitleEditForm, {
+        opacity: 0,
+        display: "none",
+        transform: "translateY(-10px)",
+        onComplete: function() {
+            gsap.to(addContainer, {
+                opacity: 0,
+                duration: 0.5,
+                display: "none"
+            })
+        }
+    });
+});
+
 TitleEditBtn.addEventListener('click', () => {
     console.log(TitleEditInput);
     // send to server ( title : value);
 
-    let from = TitleEditInput.getAttribute("from");
+    let table_id = TitleEditInput.getAttribute("table_id");
     let to = TitleEditInput.value;
 
     let rq = {
         cmd : "edit_title_rq",
-        from : from,
+        table_id : table_id,
         to : to
     };
 
@@ -47,12 +62,13 @@ TitleEditBtn.addEventListener('click', () => {
     });
 });
 
-function CreateBarItem(title)
+function CreateBarItem(table_id, title)
 {
     // pug에서도 교체할 수 있을지도?
     var new_element = document.createElement('Button');
     new_element.className = "bar_item";
     new_element.setAttribute("title", title);
+    new_element.setAttribute("table_id", table_id);
     new_element.innerText = title;
 
     AddEventBarItem(new_element);
@@ -61,8 +77,8 @@ function CreateBarItem(title)
 }
 
 function LongPressCallBack(element) {
-    title_edit_input.setAttribute("from", element.getAttribute("title"));
-    title_edit_input.value = element.getAttribute("title");
+    TitleEditInput.setAttribute("table_id", element.getAttribute("table_id"));
+    TitleEditInput.value = element.getAttribute("title");
 
     gsap.to(addContainer,
         {
@@ -82,11 +98,10 @@ function LongPressCallBack(element) {
 }
 
 function ShortPressCallBack(bar_item) {
+    var uid = bar_item.getAttribute('table_id');
     var title = bar_item.getAttribute('title');
-    console.log(title);
-    //window.history.pushState('param', 'unused', `/home/${title}`);
-  
-    console.log(window.location.href);
+
+    window.location.replace(`/record/select?table_id=${uid}&title=${title}`);
 }
 
 let timer;

@@ -10,7 +10,7 @@ exports.home = (req, res)=>{
     if(!req.isAuthenticated()){
         res.redirect("/user/login");
     };
-
+    console.log("Get Home");
     console.log(req.user);
 
     async.parallel({
@@ -27,35 +27,37 @@ exports.home = (req, res)=>{
         function(err, results){
             if(err){throw err}
 
-            let temp_tables = [
-              {
-                title: "Memory Title",
-              },
-              {
-                title: "Code Guide",
-              },
-              {
-                title: "Code Experience",
-              },
-              {
-                title: "Content System",
-              },
-              {
-                title: "Computer Science"
-              },
-              {
-                title: "Network System"
-              },
-              {
-                title: "Framework"
-              }
-            ];
+            // let temp_tables = [
+            //   {
+            //     title: "Memory Title",
+            //   },
+            //   {
+            //     title: "Code Guide",
+            //   },
+            //   {
+            //     title: "Code Experience",
+            //   },
+            //   {
+            //     title: "Content System",
+            //   },
+            //   {
+            //     title: "Computer Science"
+            //   },
+            //   {
+            //     title: "Network System"
+            //   },
+            //   {
+            //     title: "Framework"
+            //   }
+            // ];
 
-            let record_tables = temp_tables.concat(results.record_table);
-            res.render('record', {
-              _title: results.user.username + ' Record',
+            res.render('Home', {
+              _table: {
+                _id : 0,
+                _title : "Home"
+              },
               _user:results.user,
-              _record_tables: record_tables,
+              _record_tables: results.record_table,
               _records:results.record,
             })
         })

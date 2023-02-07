@@ -1,18 +1,20 @@
 
 const person = document.querySelector('#person');
 const nav = document.querySelector('.nav');
-const recordBtn = document.querySelector('.new-record');
 const addContainer = document.querySelector('.add-record');
 const recordForm = document.querySelector('#record-form');
 const recordClose = document.querySelector('#record-close');
 const recordEditBtns = document.querySelectorAll('.edit-record');
+const RecordRemoveDoms = document.querySelectorAll('#delete');
 
-function SetRecordForm({id, subject, desc, date, time})
+function SetRecordForm({id, table_id, subject, desc, date, time})
 {
     if (id != null) document.getElementById("record_id").setAttribute('value', id);
 
+    if (table_id != null) document.getElementById("table_id").setAttribute('value', table_id);
+
     // set title
-    if (subject != null) document.getElementById("record_title").setAttribute('value', subject);
+    if (subject != null) document.getElementById("record_subject").setAttribute('value', subject);
 
     // set date
     if (date != null) document.getElementById('record_date').setAttribute('value', date);
@@ -34,30 +36,11 @@ person.addEventListener('mouseout', ()=>{
     nav.style.opacity = '0';
     nav.style.marginTop = '-10px';
 })
-recordBtn.addEventListener('click', ()=>{
-    window.history.pushState('Home', 'Home', '/home/create')
-
-    gsap.to(addContainer, {
-        duration: 1,
-        opacity: "1",
-        display: 'flex',
-        onComplete: function(){
-            gsap.to(recordForm, {
-                display: 'block',
-                opacity:1,
-                y: 0,
-                duration: 1,
-                ease:'elastic',
-                force3D: true
-            })
-        }
-    })
-})
 
 recordClose.addEventListener('click', ()=>{
     window.history.pushState('Home', 'Home', '/home') // <-- form 을 보낼 떄 받는 라우터를 지정하는데 쓰임 index.js 를 확인하자.
 
-    SetRecordForm({title: '', desc: '', date: '', time: ''});
+    SetRecordForm({table_id: '', subject: '', desc: '', date: '', time: ''});
 
     gsap.to(recordForm, {
         opacity:0,
@@ -77,26 +60,13 @@ recordClose.addEventListener('click', ()=>{
 })
 
 recordEditBtns.forEach(recordEditBtn => recordEditBtn.addEventListener('click', () => {
-    window.history.pushState('Home', 'Home', "/home/edit");
+    window.history.pushState('Home', 'Home', "/record/edit");
     console.log(recordEditBtn);
 
     let record_str = recordEditBtn.getAttribute('record');
     let record = JSON.parse(record_str);
-    //console.log(record);
 
-    // // set title
-    // document.getElementById("record_title").setAttribute('value', record.title);
-
-    // // set date
-    // document.getElementById('record_date').setAttribute('value', record.date);
-    
-    // // set time
-    // document.getElementById('record_time').setAttribute('value', record.time);
-    
-    // // set desc
-    // document.getElementById("detail").innerText = record.description;
-    
-    SetRecordForm({id: record._id, subject: record.subject, desc: record.description, date: record.date, time: record.time});
+    SetRecordForm({id: record._id, table_id: _table._id, subject: record.subject, desc: record.description, date: record.date, time: record.time});
 
     gsap.to(addContainer, {
         duration: 1,
@@ -104,6 +74,7 @@ recordEditBtns.forEach(recordEditBtn => recordEditBtn.addEventListener('click', 
         display: 'flex',
         onComplete: function(){
             gsap.to(recordForm, {
+                display: 'block',
                 opacity:1,
                 y: 0,
                 duration: 1,
@@ -112,4 +83,11 @@ recordEditBtns.forEach(recordEditBtn => recordEditBtn.addEventListener('click', 
             })
         }
     }) 
+}));
+
+console.log(RecordRemoveDoms);
+
+RecordRemoveDoms.forEach(dom => dom.addEventListener('click', () => {
+    window.history.pushState('record', 'Home', "/record/remove");
+    console.log(dom);
 }));

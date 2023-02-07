@@ -106,16 +106,7 @@ class Client
     client.logger.Str("call func OnCreateRecordTable_RQ").Write();
 
     // create record table
-    const found_table = await RecordTable.findOne({title: packet.title, user: client.token});
-    if (found_table != null)
-    {
-		// 테스트용..
-		client.SendPacket("create_record_table_rs", {title : packet.title, router : '/home'});
-      //client.SendPacket("create_record_table_rs", {result: "failed"});
-    }
-    else
-    {
-      const table = new RecordTable({
+    const table = new RecordTable({
         title : packet.title,
         desciption : "desciption",
         user : client.token
@@ -127,9 +118,8 @@ class Client
           throw err;
         }
   
-        client.SendPacket("create_record_table_rs", {title : table.title, router : '/home'});
+        client.SendPacket("create_record_table_rs", {table_id : table._id, title : table.title, result : true});
       });
-    }
   }
 
   async OnEditTitle_RQ(client, packet)
@@ -137,7 +127,7 @@ class Client
     client.logger.Str("call func OnEditTitle_RQ").Obj(packet).Write();
     RecordTable.updateOne(
         {
-            title: packet.from
+            _id: packet.table_id
         },
         {
             $set: {

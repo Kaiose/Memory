@@ -19,11 +19,13 @@ const { WebSocketServer } = require('ws');
 
 // custom module
 var ConfigLocal = require('./utils/config_local');
-const { config } = require('dotenv');
 var indexRouter = require('./4.routes/index');
 var usersRouter = require('./4.routes/users');
+var recordRouter = require('./4.routes/record');
+
 var userModel = require('./1.models/user');
 const ClientMgr = require('./2.client/client_mgr');
+
 
 
 var url = process.env.MONGOURL;
@@ -68,7 +70,7 @@ const cspOptions = {
     // 구글 API 도메인과 인라인된 스크립트를 허용합니다.
     "script-src": ["'self'", "*.googleapis.com", "'unsafe-inline'"],
 
-    "connect-src" : ["'self'", "ws://127.0.0.1:5000"]
+    "connect-src" : ["'self'", "ws://127.0.0.1:5000", "http://127.0.0.1:4000"]
   }
 }
 
@@ -101,9 +103,10 @@ app.use((req, res, next)=>{
   next();
 });
 
-
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
+app.use('/record', recordRouter);
+//app.use('/record', recordRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -121,11 +124,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
 /// prepare manager
 var client_mgr = new ClientMgr();
-
-///
 
 function StartServer()
 {
@@ -166,6 +166,8 @@ function OpenHttp(port)
   const ssl_cert_path = __dirname + '/ssl/server.crt';
   const ssl_ca_path   = __dirname + '/ssl/server.csr';
 
+  console.log(ssl_key_path);
+
   let can_use_ssl = true;
       can_use_ssl &= fs.existsSync(ssl_key_path);
       can_use_ssl &= fs.existsSync(ssl_cert_path);
@@ -180,7 +182,7 @@ function OpenHttp(port)
       }
 
       https.createServer(options, app).listen(port, () => {
-        console.log("Start With Http, can connect (private ip or share hub ip) ")
+        console.log("Start With Https, can connect (private ip or share hub ip) ")
         console.log(`Listening on port ${port}`);
       });
   }

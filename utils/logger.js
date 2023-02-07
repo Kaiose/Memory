@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 class Logger
 {
   constructor()
@@ -23,6 +25,7 @@ class Logger
 
   Write() {
     console.log(this.builder);
+
     this.builder = "";
   }
 }

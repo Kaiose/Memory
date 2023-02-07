@@ -7,4 +7,4 @@ var recordTableSchema = new Schema ({
   user: { type: Schema.Types.ObjectId, ref: 'user' }
 });
 
-  module.exports = mongoose.model('record_table', recordTableSchema, 'record_table')
+  module.exports = mongoose.model('record.table', recordTableSchema, 'record.table')

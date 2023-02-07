@@ -19,7 +19,10 @@ websocket.addEventListener('message', ({data})=> {
 	let packet = JSON.parse(data);
 	if (packet.cmd == 'create_record_table_rs')
 	{
-        CreateBarItem(packet.title);
+        if (packet.result == true)
+        {
+            CreateBarItem(packet.table_id, packet.title);
+        }
 	}
 
     if (packet.cmd == "edit_title_rs")

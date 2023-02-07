@@ -6,7 +6,7 @@ var recordSchema = new Schema({
     description: String,
     date: String,
     time: String,
-    table: {type:Schema.Types.ObjectId, ref: 'record_table'}
+    table: {type:Schema.Types.ObjectId, ref: 'record.table'}
 });
 
 module.exports = mongoose.model('record', recordSchema, 'record');
