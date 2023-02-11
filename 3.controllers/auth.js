@@ -11,9 +11,6 @@ require('dotenv').config();
 //  get '/login'
 exports.login = (req, res) => {
     const messages = req.flash();
-    console.log("Get Login");
-    console.log(req.user);
-
     res.render('auth', { title: 'Login', messages })
 };
 

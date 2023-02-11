@@ -51,23 +51,24 @@ exports.select_all = (req, res) => {
 
 // record table
 exports.create_record_table = (req, res, next) => {
-  if(!req.isAuthenticated()){
-      res.redirect('/')
+    if(!req.isAuthenticated()){
+        console.log('Start Create Record Table2');
+
+        res.redirect('/')
       return;
   }
 
   var errors = validationResult(req);
-  if (!erros.isEmpty())
+  if (!errors.isEmpty())
   {
-    console.log('error accur');
     console.log(errors);
     res.redirect('/home');
     return;
   }
 
-  const table = new recordTableModel({
-    title : "",
-    description : "",
+  const table = new RecordTable({
+    title : req.body.title,
+    description : "example..",
     user : req.user._id
   });
 
@@ -75,8 +76,59 @@ exports.create_record_table = (req, res, next) => {
     if(err){
         throw err;
     }
-    res.redirect('/home');
+    
+    let data = {
+        table_id : table._id,
+        title : table.title
+    };
+
+    res.send(JSON.stringify(data));
   });
+}
+
+exports.edit_record_table = (req, res, nexr) => {
+    if(!req.isAuthenticated()){
+        console.log('Start Create Record Table2');
+
+        res.redirect('/')
+      return;
+  }
+
+  var errors = validationResult(req);
+  if (!errors.isEmpty())
+  {
+    console.log(errors);
+    res.redirect('/home');
+    return;
+  }
+
+  console.log("Temp1");
+
+  let table_id = req.body.table_id;
+  let new_title = req.body.title;
+
+  RecordTable.updateOne(
+    {
+        _id: table_id
+    },
+    {
+        $set: {
+            title: new_title
+        }
+    }, (err)=>{
+        if (err) {
+            console.log("[edit_title] failed," + err);
+            console.log(req.body);
+            throw err;
+        }
+        let data = {
+            table_id : table_id,
+            title : new_title
+        };
+
+        res.send(JSON.stringify(data));
+    });
+
 }
 
 // record

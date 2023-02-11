@@ -22,6 +22,7 @@ var ConfigLocal = require('./utils/config_local');
 var indexRouter = require('./4.routes/index');
 var usersRouter = require('./4.routes/users');
 var recordRouter = require('./4.routes/record');
+var recordTableRouter = require('./4.routes/record_table');
 
 var userModel = require('./1.models/user');
 const ClientMgr = require('./2.client/client_mgr');
@@ -106,7 +107,7 @@ app.use((req, res, next)=>{
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/record', recordRouter);
-//app.use('/record', recordRouter);
+app.use('/record_table', recordTableRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

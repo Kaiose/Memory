@@ -1,21 +1,36 @@
+{
 const BarItems = document.querySelectorAll('.bar_item');
 const NewRecordTableBtn = document.querySelector('#new_record_table');
 const TitleEditForm = document.querySelector('#title_edit_form');
 const TitleEditInput = document.querySelector('#title_edit_input');
 const TitleEditBtn = document.querySelector('#title_edit_btn');
 const TitleEditClose = document.querySelector('#title_edit_form_close');
+const addContainer = document.querySelector('.add-record');
 
 NewRecordTableBtn.addEventListener('click', ()=>{
   console.log("[record_table] click creation record btn");
 
-  const rq = {
-    "cmd" : "create_record_table_rq",
-    "title" : "New Record Table"
-  };
+    let data = JSON.stringify({ 
+        title : "New Record Table"
+     });
 
-  // call pop
+    fetch("/record_table/create", {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body : data
+    })
+    .then((res) => res.json())
+    .then(table => {
+        if (table.err != null)
+        {
+            alert(`Can't Create New Table)`);
+            return;
+        }
 
-  websocket.send(JSON.stringify(rq));
+        CreateRecordTable(table.table_id, table.title);
+    });
 });
 
 TitleEditClose.addEventListener('click', () => {
@@ -38,15 +53,30 @@ TitleEditBtn.addEventListener('click', () => {
     // send to server ( title : value);
 
     let table_id = TitleEditInput.getAttribute("table_id");
-    let to = TitleEditInput.value;
+    let title = TitleEditInput.value;
 
-    let rq = {
-        cmd : "edit_title_rq",
+    let data = {
         table_id : table_id,
-        to : to
+        title : title
     };
 
-    websocket.send(JSON.stringify(rq));
+    fetch("/record_table/edit", {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify(data)
+    })
+    .then((res) => res.json())
+    .then(table => {
+        if (table.err != null)
+        {
+            alert(`Can't Edit Table)`);
+            return;
+        }
+
+        EditRecordTable(table.table_id, table.title);
+    });
 
     gsap.to(TitleEditForm, {
         opacity: 0,
@@ -62,7 +92,7 @@ TitleEditBtn.addEventListener('click', () => {
     });
 });
 
-function CreateBarItem(table_id, title)
+function CreateRecordTable(table_id, title)
 {
     // pug에서도 교체할 수 있을지도?
     var new_element = document.createElement('Button');
@@ -75,6 +105,31 @@ function CreateBarItem(table_id, title)
 
     document.getElementById("title_list").appendChild(new_element);
 }
+
+function FindRecordTable(table_id)
+{
+    let items = document.querySelectorAll('.bar_item');
+    for (let element of items)
+    {
+        console.log(element);
+        if (table_id == element.getAttribute('table_id'))
+            return element;
+    }
+
+    return null;
+}
+
+function EditRecordTable(table_id, title)
+{
+    let target = FindRecordTable(table_id);
+    if (target == null)
+    {
+        console.log("Can't Find Target Item: " + table_id);
+        return;
+    }
+    target.setAttribute('title', title);
+    target.innerText = title;
+l}
 
 function LongPressCallBack(element) {
     TitleEditInput.setAttribute("table_id", element.getAttribute("table_id"));
@@ -101,7 +156,7 @@ function ShortPressCallBack(bar_item) {
     var uid = bar_item.getAttribute('table_id');
     var title = bar_item.getAttribute('title');
 
-    window.location.replace(`/record/select?table_id=${uid}&title=${title}`);
+    window.location.replace(`/record_table/select?table_id=${uid}&title=${title}`);
 }
 
 let timer;
@@ -125,3 +180,4 @@ function AddEventBarItem(bar_item)
 }
 
 BarItems.forEach(bar_item => AddEventBarItem(bar_item));
+}

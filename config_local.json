@@ -1,8 +1,8 @@
 {
   "use_ws" : true,
   "use_https" : true,
-  "https_port" : 4000,
-  "ws_port" : 5000,
+  "https_port" : 4100,
+  "ws_port" : 5100,
   "monitoring_user" : true,
   "sync_server_time" : false
 }

@@ -1,4 +1,10 @@
-var websocket = new WebSocket('ws://127.0.0.1:5000');
+/*
+    deprecated..
+    use https!
+*/
+
+//var websocket = new WebSocket('ws://127.0.0.1:5000');
+var websocket = new WebSocket('ws://124.60.107.100:5100');
 
 console.log(websocket);
 
@@ -21,7 +27,7 @@ websocket.addEventListener('message', ({data})=> {
 	{
         if (packet.result == true)
         {
-            CreateBarItem(packet.table_id, packet.title);
+            CreateRecordTable(packet.table_id, packet.title);
         }
 	}
 

@@ -1,4 +1,4 @@
-
+{
 const person = document.querySelector('#person');
 const nav = document.querySelector('.nav');
 const addContainer = document.querySelector('.add-record');
@@ -91,3 +91,5 @@ RecordRemoveDoms.forEach(dom => dom.addEventListener('click', () => {
     window.history.pushState('record', 'Home', "/record/remove");
     console.log(dom);
 }));
+
+}

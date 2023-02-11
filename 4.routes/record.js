@@ -8,10 +8,9 @@ router.get('/create' , (req, res, next) => {
     }
     res.redirect('/home')
 });
+
 router.post('/create', record.create_record);
-
 router.post('/edit', record.edit_record);
-
-router.get('/select', record.select_all);
 router.post('/remove', record.record_delete);
+
 module.exports = router;
