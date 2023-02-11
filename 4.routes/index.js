@@ -12,8 +12,8 @@ router.get('/', (req, res)=>{
 router.get('/home', home.home);
 
 // profile
-router.get('/home/profile', home.user_profile);
-router.post('/home/profile', home.user_profile_post);
+// router.get('/home/profile', home.user_profile);
+// router.post('/home/profile', home.user_profile_post);
 
 
 module.exports = router;

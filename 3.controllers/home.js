@@ -27,30 +27,6 @@ exports.home = (req, res)=>{
         function(err, results){
             if(err){throw err}
 
-            // let temp_tables = [
-            //   {
-            //     title: "Memory Title",
-            //   },
-            //   {
-            //     title: "Code Guide",
-            //   },
-            //   {
-            //     title: "Code Experience",
-            //   },
-            //   {
-            //     title: "Content System",
-            //   },
-            //   {
-            //     title: "Computer Science"
-            //   },
-            //   {
-            //     title: "Network System"
-            //   },
-            //   {
-            //     title: "Framework"
-            //   }
-            // ];
-
             res.render('Home', {
               _table: {
                 _id : 0,
